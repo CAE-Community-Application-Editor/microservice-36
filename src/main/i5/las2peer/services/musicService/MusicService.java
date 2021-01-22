@@ -116,13 +116,22 @@ public class MusicService extends RESTService {
 
 
 
-     
-    // service method invocations
+    Connection connection;
 
-     
+    try {
+        connection = dbm.getConnection();
 
+        String songTitle = (String) payload_JSON.get("title");
+    
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO songs (title) VALUES(?);");
+        statement.setString(1, songTitle);
+        statement.executeUpdate();
+        statement.close();
 
-
+        return Response.ok("Success").build();
+    } catch (SQLException e) {
+        return Response.serverError().build();
+    }
 
     // response
     boolean response_condition = true;
